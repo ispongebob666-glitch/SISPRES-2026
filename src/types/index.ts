@@ -102,7 +102,6 @@ export interface CompetitionSettings {
 export interface LiveScoreItem {
   rank: number;
   participant_id: string;
-  school_id: string;
   nama_sekolah: string;
   gender: Gender;
   status: ExamStatus;

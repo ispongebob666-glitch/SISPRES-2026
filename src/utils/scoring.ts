@@ -110,21 +110,7 @@ export function calculateExamScore(questions: Question[], answers: Record<string
  * 3. More answered questions
  */
 export function rankParticipants(
-  items: Array<{
-    participant_id: string;
-    school_id: string;
-    nama_sekolah: string;
-    gender: Gender;
-    status: ExamStatus;
-    nilai_sementara: number;
-    nilai_final: number | null;
-    durasi_detik: number;
-    waktu_mulai: string | null;
-    checkpoint_terakhir: string | null;
-    waktu_selesai: string | null;
-    jumlah_terjawab: number;
-    total_soal: number;
-  }>,
+  items: LiveScoreItem[],
   tieBreaker: 'durasi_tercepat' | 'soal_terbanyak' | 'imbang' = 'durasi_tercepat'
 ): LiveScoreItem[] {
   const sorted = [...items].sort((a, b) => {

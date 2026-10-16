@@ -747,8 +747,8 @@ class Database {
     const activeQuestionsCount = this.data.questions.filter(q => q.status === 'aktif').length;
 
     const items: Array<{
+      rank: number;
       participant_id: string;
-      school_id: string;
       nama_sekolah: string;
       gender: 'putra' | 'putri';
       status: any;
@@ -764,8 +764,8 @@ class Database {
       const exam = this.data.exams[p.id];
       if (!exam) {
         return {
+          rank: 0,
           participant_id: p.id,
-          school_id: '',
           nama_sekolah: p.nama,
           gender: p.gender,
           status: p.status,
@@ -788,8 +788,8 @@ class Database {
       }
 
       return {
+        rank: 0,
         participant_id: p.id,
-        school_id: '',
         nama_sekolah: p.nama,
         gender: p.gender,
         status: exam.status,

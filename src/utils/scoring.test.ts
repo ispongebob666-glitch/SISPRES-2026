@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { evaluateAnswer, calculateExamScore, rankParticipants } from './scoring.ts';
-import type { Question } from '../types/index.ts';
+import type { Question, LiveScoreItem } from '../types/index.ts';
 
 test('evaluateAnswer: single choice / pilihan ganda', () => {
   const q: Question = {
@@ -84,10 +84,10 @@ test('calculateExamScore: calculates full and partial exam results', () => {
 });
 
 test('rankParticipants: orders by highest score then fastest duration', () => {
-  const participants = [
+  const participants: LiveScoreItem[] = [
     {
+      rank: 0,
       participant_id: 'p1',
-      school_id: 's1',
       nama_sekolah: 'SD Bintang 1',
       gender: 'putra' as const,
       status: 'Selesai' as const,
@@ -101,8 +101,8 @@ test('rankParticipants: orders by highest score then fastest duration', () => {
       total_soal: 20,
     },
     {
+      rank: 0,
       participant_id: 'p2',
-      school_id: 's2',
       nama_sekolah: 'SD Harapan Bangsa',
       gender: 'putra' as const,
       status: 'Selesai' as const,
@@ -116,8 +116,8 @@ test('rankParticipants: orders by highest score then fastest duration', () => {
       total_soal: 20,
     },
     {
+      rank: 0,
       participant_id: 'p3',
-      school_id: 's3',
       nama_sekolah: 'SD Negeri Cendikia',
       gender: 'putra' as const,
       status: 'Selesai' as const,

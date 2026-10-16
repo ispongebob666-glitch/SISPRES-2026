@@ -1,3 +1,4 @@
+import { supabase } from './supabaseClient.ts';
 import type {
   School,
   Participant,
@@ -14,13 +15,15 @@ const API_BASE = '/api';
 export const api = {
   // Public
   async getSchools(): Promise<School[]> {
-    const res = await fetch(`${API_BASE}/public/schools`);
-    return res.json();
+    const { data, error } = await supabase.from('schools').select('*');
+    if (error) throw error;
+    return data || [];
   },
 
   async getPublicParticipants(): Promise<Participant[]> {
-    const res = await fetch(`${API_BASE}/public/participants`);
-    return res.json();
+    const { data, error } = await supabase.from('participants').select('*');
+    if (error) throw error;
+    return data || [];
   },
 
   async getPublicSettings(): Promise<Partial<CompetitionSettings>> {
@@ -131,38 +134,27 @@ export const api = {
   },
 
   async getParticipants(): Promise<Participant[]> {
-    const res = await fetch(`${API_BASE}/admin/participants`, {
-      headers: { 'x-role': 'ADMIN' },
-    });
-    return res.json();
+    const { data, error } = await supabase.from('participants').select('*');
+    if (error) throw error;
+    return data || [];
   },
 
   async createParticipant(p: Partial<Participant>) {
-    const res = await fetch(`${API_BASE}/admin/participants`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'x-role': 'ADMIN' },
-      body: JSON.stringify(p),
-    });
-    const data = await res.json();
-    if (!res.ok) throw new Error(data.error || 'Gagal menambah peserta.');
+    const { data, error } = await supabase.from('participants').insert(p).select().single();
+    if (error) throw error;
     return data;
   },
 
   async updateParticipant(id: string, p: Partial<Participant>) {
-    const res = await fetch(`${API_BASE}/admin/participants/${id}`, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json', 'x-role': 'ADMIN' },
-      body: JSON.stringify(p),
-    });
-    return res.json();
+    const { data, error } = await supabase.from('participants').update(p).eq('id', id).select().single();
+    if (error) throw error;
+    return data;
   },
 
   async deleteParticipant(id: string) {
-    const res = await fetch(`${API_BASE}/admin/participants/${id}`, {
-      method: 'DELETE',
-      headers: { 'x-role': 'ADMIN' },
-    });
-    return res.json();
+    const { error } = await supabase.from('participants').delete().eq('id', id);
+    if (error) throw error;
+    return { success: true };
   },
 
   async resetParticipant(id: string) {
@@ -176,12 +168,9 @@ export const api = {
   },
 
   async importParticipants(items: any[]) {
-    const res = await fetch(`${API_BASE}/admin/participants/import`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'x-role': 'ADMIN' },
-      body: JSON.stringify({ items }),
-    });
-    return res.json();
+    const { data, error } = await supabase.from('participants').insert(items).select();
+    if (error) throw error;
+    return { addedCount: data?.length || 0, errors: [] };
   },
 
   async getQuestions(): Promise<Question[]> {
